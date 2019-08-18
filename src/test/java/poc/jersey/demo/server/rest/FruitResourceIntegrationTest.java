@@ -1,5 +1,7 @@
 package poc.jersey.demo.server.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.CoreMatchers;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -17,8 +19,11 @@ import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 
 import poc.jersey.demo.server.config.ViewApplicationConfig;
+import poc.jersey.demo.server.exceptions.dto.ErrorDTO;
 import poc.jersey.demo.server.model.Fruit;
 import poc.jersey.demo.server.providers.FruitExceptionMapper;
+
+import java.io.IOException;
 
 public class FruitResourceIntegrationTest extends JerseyTest {
 
@@ -121,13 +126,17 @@ public class FruitResourceIntegrationTest extends JerseyTest {
     }
 
     @Test
-    public void givenFruit_whenFruitIsInvalid_thenResponseContainsCustomExceptions() {
+    public void givenFruit_whenFruitIsInvalid_thenResponseContainsCustomExceptions() throws IOException {
         final Response response = target("fruit/exception").request().get();
 
         assertEquals("Http Response should be 400 ", 400, response.getStatus());
         String responseString = response.readEntity(String.class);
-        assertThat(responseString, containsString("exception.<return value>.colour size must be between 5 and 200"));
-        assertThat(responseString, containsString("exception.<return value>.name size must be between 5 and 200"));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ErrorDTO errorDTO = objectMapper.readValue(responseString, ErrorDTO.class);
+        assertThat(errorDTO, CoreMatchers.notNullValue());
+        assertThat(errorDTO.getHttpCode(), CoreMatchers.is(Status.BAD_REQUEST.getStatusCode()));
+        assertThat(errorDTO.getMessage(), CoreMatchers.equalTo("business exception happen"));
     }
 
 }

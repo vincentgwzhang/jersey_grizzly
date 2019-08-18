@@ -2,6 +2,7 @@ package poc.jersey.demo.server.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import poc.jersey.demo.server.constraints.SerialNumber;
+import poc.jersey.demo.server.exceptions.exception.BusinessException;
 import poc.jersey.demo.server.model.Fruit;
 import poc.jersey.demo.business.service.SimpleStorageService;
 import org.glassfish.jersey.server.mvc.ErrorTemplate;
@@ -136,9 +137,6 @@ public class FruitResource {
     @Path("/exception")
     @Valid
     public Fruit exception() {
-        Fruit fruit = new Fruit();
-        fruit.setName("a");
-        fruit.setColour("b");
-        return fruit;
+        throw new BusinessException();
     }
 }
