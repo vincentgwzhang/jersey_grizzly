@@ -23,7 +23,11 @@ Providers接口定义了4个方法，分别用来获取MessageBodyReader、Messa
 
 
 # REST过滤器 (JAX-RS 2.0定义了4种过滤器扩展点接口，供开发者实现业务逻辑，先后为：)
-## ClientRequestFilter
-## ContainerRequestFilter
-## ContainerResponseFilter
-## ClientResponseFilter
+01 ClientRequestFilter
+02 ContainerRequestFilter
+03 ContainerResponseFilter
+04 ClientResponseFilter
+
+Append:
+1, Add netty support
+2, Add Spring support

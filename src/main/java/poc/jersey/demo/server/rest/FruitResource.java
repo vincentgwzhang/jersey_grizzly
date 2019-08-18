@@ -1,8 +1,9 @@
 package poc.jersey.demo.server.rest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import poc.jersey.demo.server.constraints.SerialNumber;
 import poc.jersey.demo.server.model.Fruit;
-import poc.jersey.demo.service.SimpleStorageService;
+import poc.jersey.demo.business.service.SimpleStorageService;
 import org.glassfish.jersey.server.mvc.ErrorTemplate;
 import org.glassfish.jersey.server.mvc.Template;
 import org.glassfish.jersey.server.mvc.Viewable;
@@ -27,6 +28,9 @@ import java.util.Map;
 
 @Path("/fruit")
 public class FruitResource {
+
+    @Autowired
+    private SimpleStorageService simpleStorageService;
 
     /**
      * Triggered: PrematchingRequestFilter
@@ -82,7 +86,7 @@ public class FruitResource {
         @NotNull(message = "Fruit colour must not be null") @FormParam("colour") String colour) {
 
         Fruit fruit = new Fruit(name, colour);
-        SimpleStorageService.storeFruit(fruit);
+        simpleStorageService.storeFruit(fruit);
     }
 
     /**
@@ -96,7 +100,7 @@ public class FruitResource {
     public void updateFruit(@SerialNumber @FormParam("serial") String serial) {
         Fruit fruit = new Fruit();
         fruit.setSerial(serial);
-        SimpleStorageService.storeFruit(fruit);
+        simpleStorageService.storeFruit(fruit);
     }
 
     /**
@@ -108,7 +112,7 @@ public class FruitResource {
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     public void createFruit(@Valid Fruit fruit) {
-        SimpleStorageService.storeFruit(fruit);
+        simpleStorageService.storeFruit(fruit);
     }
     
     @POST
@@ -124,7 +128,7 @@ public class FruitResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/search/{name}")
     public Fruit findFruitByName(@PathParam("name") String name) {
-        return SimpleStorageService.findByName(name);
+        return simpleStorageService.findByName(name);
     }
 
     @GET

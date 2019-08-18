@@ -1,19 +1,21 @@
-package poc.jersey.demo.service;
+package poc.jersey.demo.business.service;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
 import poc.jersey.demo.server.model.Fruit;
 
+@Service
 public class SimpleStorageService {
 
-    private static final Map<String, Fruit> fruits = new HashMap<>();
+    private final Map<String, Fruit> fruits = new HashMap<>();
 
-    public static void storeFruit(final Fruit fruit) {
+    public void storeFruit(final Fruit fruit) {
         fruits.put(fruit.getName(), fruit);
     }
     
-    public static Fruit findByName(final String name) {
+    public Fruit findByName(final String name) {
         return fruits.entrySet()
             .stream()
             .filter(map -> name.equals(map.getKey()))
